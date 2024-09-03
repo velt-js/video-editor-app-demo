@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { GUEST_USERS } from '../utils/constant';
-import {User} from '@veltdev/types';
+import { User } from '@veltdev/types';
 
 /**
  * AuthService handles user authentication and management for the application.
@@ -13,7 +13,7 @@ export class AuthService {
 	/**
 	 * Signal to store and manage the current user state.
 	 */
-	private userSignal = signal<User | null>(null);
+	public userSignal = signal<User | null>(null);
 
 	constructor() {
 		// Load user from localStorage on service initialization

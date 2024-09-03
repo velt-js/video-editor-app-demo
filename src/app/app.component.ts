@@ -15,7 +15,7 @@ import { DocumentComponent } from './components/document/document.component'
 	styleUrl: './app.component.scss',
 
 	// This is important to use elements in HTML
-	schemas: [CUSTOM_ELEMENTS_SCHEMA] 
+	schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 
 export class AppComponent implements OnInit {
@@ -36,12 +36,10 @@ export class AppComponent implements OnInit {
 		await this.veltService.initializeVelt('AN5s6iaYIuLLXul0X4zf');
 
 		// Identify the current user if authenticated
-		const user = this.authService.getUser()();
+		const user = this.authService.userSignal();
 		if (user) {
 			await this.veltService.identifyUser(user);
 		}
-		
-		// Enable dark mode for Velt UI
-		this.veltService.setDarkMode(true);
+
 	}
 }

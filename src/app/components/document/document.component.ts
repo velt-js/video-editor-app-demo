@@ -1,8 +1,7 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild, OnInit, OnDestroy } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild, effect } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { VeltService } from '../../services/velt.service';
 import { NgIf } from '@angular/common';
-import { Subscription } from 'rxjs';
 
 /**
  * DocumentComponent handles the video player functionality and integrates Velt collaboration features.
@@ -13,75 +12,64 @@ import { Subscription } from 'rxjs';
 	imports: [RouterOutlet, NgIf],
 	templateUrl: './document.component.html',
 	styleUrl: './document.component.scss',
+
+	// Schemas are required to add Velt html tags
 	schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 
-export class DocumentComponent implements OnInit, OnDestroy {
+export class DocumentComponent {
 	title = 'video';
 
 	@ViewChild('vid') videoPlayer!: ElementRef<HTMLVideoElement>;
 	@ViewChild('timePassedDiv') timePassedDiv!: ElementRef<HTMLVideoElement>;
 	@ViewChild('commentPlayerTimeline') commentPlayerTimeline!: ElementRef<HTMLElement>;
 
-	private clientInitSubscription: Subscription | undefined;
 	isPlaying: boolean = false;
+
+	client = this.veltService.clientSignal();
 
 	constructor(
 		private veltService: VeltService
-	) { }
+	) {
+		effect(() => {
 
-	/**
-	 * Initializes the component and sets up Velt client subscription.
-	 */
-	ngOnInit(): void {
-		this.clientInitSubscription = this.veltService.clientInitialized.subscribe(() => {
-			this.initializeDocument();
+			this.client = this.veltService.clientSignal();
+			if (this.client) {
+
+				// Contain your comments in a document by setting a Document ID & Name
+				this.veltService.setDocument('video', { documentName: 'video' });
+
+				// Enable dark mode for Velt UI
+				this.veltService.setDarkMode(true);
+
+				/**
+				 * When comment is toggled 
+				 * we set the current timestamp as the location
+				 * and pause the video
+				 */
+				this.client.getCommentElement().onCommentModeChange().subscribe((mode: boolean) => {
+					if (mode) {
+						this.setLocation();
+						this.videoPlayer.nativeElement.pause();
+					}
+				});
+
+			}
 		});
-
-		// If the client is already initialized, call initializeDocument immediately
-		if (this.veltService.getClient()) {
-			this.initializeDocument();
-		}
 	}
 
 	/**
-	 * Cleans up subscriptions when the component is destroyed.
-	 */
-	ngOnDestroy(): void {
-		if (this.clientInitSubscription) {
-			this.clientInitSubscription.unsubscribe();
-		}
-	}
-
-	/**
-	 * Initializes the Velt document and sets up comment mode change listener.
-	 */
-	private initializeDocument(): void {
-		this.veltService.setDocument('video', { documentName: 'video' });
-
-		// Video Logic 
-		if (this.veltService.getClient()) {
-			this.veltService.getClient().getCommentElement().onCommentModeChange().subscribe((mode: boolean) => {
-				if (mode) {
-					this.setLocation();
-					this.videoPlayer.nativeElement.pause();
-				}
-			});
-		}
-	}
-
-	/**
-	 * Sets the current location for Velt based on video player's current time.
+	 * Sets the current location in Velt based on video player's current timestamp.
 	 */
 	setLocation = () => {
-		// set currentMediaPosition property on a Location object to represent the current frame
+
 		let location = {
 			currentMediaPosition: this.videoPlayer.nativeElement.currentTime,
 			videoPlayerId: "vid"
 		}
 
 		//set the Location using the client
-		this.veltService.getClient().setLocation(location)
+		this.client?.setLocation(location)
 	}
 
 	/**
@@ -89,22 +77,29 @@ export class DocumentComponent implements OnInit, OnDestroy {
 	 */
 	ngAfterViewInit() {
 
+		/**
+		 * Update the location using the clicked comment location
+		 * and set the video to that timestamp
+		 */
+
 		this.commentPlayerTimeline?.nativeElement.addEventListener('onCommentClick', (event: any) => {
-			console.log('onCommentClick', event.detail);
 			const { location } = event.detail || {};
 			if (location) {
 				const videoTag = document.getElementById(location.videoPlayerId) as HTMLVideoElement;
 				if (videoTag) {
 					videoTag.currentTime = location.currentMediaPosition;
 					videoTag.pause();
-					this.veltService.getClient().setLocation(location);
+
+					this.client?.setLocation(location)
 				}
 			}
 		});
 
+		// When we dynamically update the video timestamp this is triggered and we ensure the right location is set in Velt Client
+		// Ideally triggered when you click on the comment bubble in the video timeline
 		this.videoPlayer.nativeElement.addEventListener('timeupdate', (event: Event) => {
 			this.timePassedDiv.nativeElement.style.width = this.videoPlayer.nativeElement.currentTime / this.videoPlayer.nativeElement.duration * 100 + '%'
-			this.veltService.getClient().setLocation({
+			this.client?.setLocation({
 				currentMediaPosition: this.videoPlayer.nativeElement.currentTime,
 				videoPlayerId: "vid"
 			})
@@ -117,9 +112,6 @@ export class DocumentComponent implements OnInit, OnDestroy {
 			this.isPlaying = true
 		})
 
-	}
-	resetLocation() {
-		this.veltService.getClient().resetLocation();
 	}
 
 	/**

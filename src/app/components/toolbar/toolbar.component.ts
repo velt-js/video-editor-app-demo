@@ -20,11 +20,13 @@ export class ToolbarComponent implements OnInit {
 		this.updateColorScheme();
 	}
 
+	// Change theme when user clicks on theme button
 	toggleDarkMode() {
 		this.isDarkMode = !this.isDarkMode;
 		this.updateColorScheme();
 	}
 
+	// Update HTML & Velt Color theme 
 	private updateColorScheme() {
 		document.body.style.colorScheme = this.isDarkMode ? 'dark' : 'light';
 		this.veltService.setDarkMode(this.isDarkMode);

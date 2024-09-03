@@ -1,7 +1,7 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { initVelt } from '@veltdev/client';
 import { AuthService } from './auth.service';
-import { User } from '@veltdev/types'
+import { User, Velt } from '@veltdev/types'
 
 /**
  * Service for managing Velt integration in an Angular application.
@@ -11,8 +11,8 @@ import { User } from '@veltdev/types'
 	providedIn: 'root'
 })
 export class VeltService {
-	private client: any;
-	public clientInitialized = new EventEmitter<void>();
+
+	private client = signal<Velt | null>(null);
 
 	constructor(
 		private authService: AuthService
@@ -23,9 +23,8 @@ export class VeltService {
 	 * @param apiKey The Velt API key
 	 */
 	async initializeVelt(apiKey: string): Promise<void> {
-		this.client = await initVelt(apiKey);
+		this.client.set(await initVelt(apiKey))
 		this.authService.login();
-		this.clientInitialized.emit();
 	}
 
 	/**
@@ -33,8 +32,8 @@ export class VeltService {
 	 * @param user The user object to identify
 	 */
 	async identifyUser(user: User): Promise<void> {
-		if (this.client) {
-			await this.client.identify(user);
+		if (this.client()) {
+			await this.client()?.identify(user);
 		}
 	}
 
@@ -44,8 +43,8 @@ export class VeltService {
 	 * @param metadata Optional metadata for the document
 	 */
 	async setDocument(documentId: string, metadata?: any): Promise<void> {
-		if (this.client) {
-			await this.client.setDocument(documentId, metadata);
+		if (this.client()) {
+			await this.client()?.setDocument(documentId, metadata);
 		}
 	}
 
@@ -54,8 +53,8 @@ export class VeltService {
 	 * @param isDarkMode Boolean indicating whether dark mode should be enabled
 	 */
 	setDarkMode(isDarkMode: boolean): void {
-		if (this.client) {
-			this.client.setDarkMode(isDarkMode);
+		if (this.client()) {
+			this.client()?.setDarkMode(isDarkMode);
 		}
 	}
 
@@ -63,7 +62,8 @@ export class VeltService {
 	 * Gets the Velt client instance.
 	 * @returns The Velt client instance
 	 */
-	getClient() {
-		return this.client;
+	get clientSignal() {
+		return this.client.asReadonly();
 	}
+
 }
