@@ -1,0 +1,99 @@
+main {
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+
+	padding-bottom: 4rem;
+
+	.player {
+		width: 100%;
+		max-width: 1120px;
+		min-width: 320px;
+		position: relative;
+
+		/*
+	&:hover {
+		.toolbar {
+			opacity: 1;
+			transition: opacity 0.3s ease-in-out;
+		}
+	}*/
+
+		video {
+			width: 100%;
+			height: auto;
+			border: 1px solid #1a1a1a;
+			border-radius: 1rem;
+		}
+
+		.toolbar {
+			width: 100%;
+			opacity: 1;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 1rem;
+			position: absolute;
+			bottom: 0;
+			padding: 1rem;
+
+			button {
+				width: 36px;
+				height: 36px;
+				background-color: transparent;
+				outline: none;
+				border-radius: 50%;
+				display: inline-flex;
+				justify-content: center;
+				align-items: center;
+				padding: 0.5rem;
+				background-color: rgba(0, 0, 0, 0.5);
+				border: 1px solid #1a1a1a;
+				cursor: pointer;
+
+				svg {
+
+					path,
+					rect {
+						fill: #fff;
+						stroke: #fff;
+					}
+				}
+			}
+
+			.player-timeline {
+				background-color: #1a1a1a;
+				width: 100%;
+				height: 8px;
+				transition: all 300ms ease-in-out;
+				border-radius: 1rem;
+
+				&:hover {
+					height: 16px;
+				}
+
+				.time-passed {
+					height: 100%;
+					width: 0%;
+					background-color: #ffffff;
+					transition: all 150ms ease-in-out;
+					border-radius: 10px;
+				}
+
+				velt-comment-player-timeline {
+					position: relative;
+					top: -180%;
+				}
+			}
+
+			velt-comment-tool,
+			velt-reaction-tool {
+				background-color: rgba(0, 0, 0, 0.5);
+				border: 1px solid #1a1a1a;
+				border-radius: 2rem;
+			}
+		}
+	}
+}
