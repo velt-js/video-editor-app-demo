@@ -1,6 +1,6 @@
-# Velt SDK Video Demo
+# Commenting on Video Player
 
-In this demo we are using Velt SDK to add powerful collaboraiton features like commenting and reactions.
+In this demo, we are using Velt SDK to add frame by frame comments and reactions on a video player.
 
 ![Sample App Video](sample-app-video.gif "Sample Video App")
 
