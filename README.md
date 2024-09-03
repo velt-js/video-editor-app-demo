@@ -2,7 +2,7 @@
 
 In this demo, we are using Velt SDK to add frame by frame comments and reactions on a video player.
 
-![Sample App Video](sample-app-video.gif "Sample Video App")
+![Sample App Video](sample-app-video.png "Sample Video App")
 
 ## Features Used in Demo
 
@@ -14,7 +14,7 @@ In this demo, we are using Velt SDK to add frame by frame comments and reactions
 To install the Velt Collaboration SDK, you can use npm or yarn. Run one of the following commands in your project directory:
 
 ```zsh
-npm install @veltdev/react
+npm install @veltdev/client
 ```
 
 ## Docs
