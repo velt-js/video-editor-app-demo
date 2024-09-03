@@ -23,7 +23,8 @@ export class VeltService {
 	 * @param apiKey The Velt API key
 	 */
 	async initializeVelt(apiKey: string): Promise<void> {
-		this.client.set(await initVelt(apiKey))
+    const client = await initVelt(apiKey)
+		this.client.set(client)
 		this.authService.login();
 	}
 
