@@ -30,10 +30,13 @@
 
 
 			</button>
-			<div class="player-timeline" (click)="customSeek($event)">
-				<div class="time-passed" #timePassedDiv></div>
+			<div class="player-timeline">
 				<velt-comment-player-timeline video-player-id="vid" total-media-length="31.3"
 					style="width: 0%;" #commentPlayerTimeline></velt-comment-player-timeline>
+
+				<div  (click)="customSeek($event)">
+					<div class="time-passed" #timePassedDiv></div>
+				</div>
 			</div>
 			<velt-reaction-tool video-player-id="vid"></velt-reaction-tool>
 			<velt-comment-tool ></velt-comment-tool>

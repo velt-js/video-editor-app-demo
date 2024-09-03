@@ -84,30 +84,30 @@ export class DocumentComponent {
 
 		this.commentPlayerTimeline?.nativeElement.addEventListener('onCommentClick', (event: any) => {
 			const { location } = event.detail || {};
-			if (location) {
-				const videoTag = document.getElementById(location.videoPlayerId) as HTMLVideoElement;
-				if (videoTag) {
-					videoTag.currentTime = location.currentMediaPosition;
-					videoTag.pause();
+			if (location && this.videoPlayer) {
+				this.videoPlayer.nativeElement.pause();
 
+				if (this.videoPlayer.nativeElement.paused) {
+
+					// Setting the player time
+					this.videoPlayer.nativeElement.currentTime = location.currentMediaPosition;
+
+					// Calculating and Setting Width to our customer seek
+					const seekPercent = (location.currentMediaPosition / this.videoPlayer.nativeElement.duration * 100) - 1.5;
+					this.timePassedDiv.nativeElement.style.width = seekPercent + '%'
+
+					// Set Location in Velt client to show comments at that location (Timestamp)
 					this.client?.setLocation(location)
 				}
 			}
 		});
 
-		// When we dynamically update the video timestamp this is triggered and we ensure the right location is set in Velt Client
-		// Ideally triggered when you click on the comment bubble in the video timeline
-		this.videoPlayer.nativeElement.addEventListener('timeupdate', (event: Event) => {
-			this.timePassedDiv.nativeElement.style.width = this.videoPlayer.nativeElement.currentTime / this.videoPlayer.nativeElement.duration * 100 + '%'
-			this.client?.setLocation({
-				currentMediaPosition: this.videoPlayer.nativeElement.currentTime,
-				videoPlayerId: "vid"
-			})
-		})
-
+		// Pause video function for custom player 
 		this.videoPlayer.nativeElement.addEventListener('pause', (e) => {
 			this.isPlaying = false
 		})
+		
+		// Play video function for custom player 
 		this.videoPlayer.nativeElement.addEventListener('play', (e) => {
 			this.isPlaying = true
 		})
