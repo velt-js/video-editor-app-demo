@@ -1,6 +1,6 @@
 # Velt SDK Video Demo
 
-In this demo we are using Velt SDK to add powerful collaboraiton features like commenting and reactions.
+In this demo, we are using Velt SDK to add powerful collaboration features like commenting and reactions.
 
 ![Sample App Video](sample-app-video.png "Sample Video App")
 
