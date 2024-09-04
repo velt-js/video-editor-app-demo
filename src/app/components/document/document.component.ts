@@ -26,21 +26,23 @@ export class DocumentComponent {
 
 	isPlaying: boolean = false;
 
+	// Getting the Velt Client
 	client = this.veltService.clientSignal();
 
 	constructor(
 		private veltService: VeltService
 	) {
+		// Set Document when the velt client is initialized
 		effect(() => {
 
 			this.client = this.veltService.clientSignal();
 			if (this.client) {
 
 				// Contain your comments in a document by setting a Document ID & Name
-				this.veltService.setDocument('video', { documentName: 'video' });
+				this.client.setDocument('video', { documentName: 'video' });
 
 				// Enable dark mode for Velt UI
-				this.veltService.setDarkMode(true);
+				this.client.setDarkMode(true);
 
 				/**
 				 * When comment is toggled 

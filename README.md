@@ -8,6 +8,9 @@ In this demo, we are using Velt SDK to add frame by frame comments and reactions
 
 - Comment on Video Timeline
 - Reactions
+- Presence
+- Sidebar
+- Notifications
 
 ## Installation
 
