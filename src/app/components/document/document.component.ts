@@ -44,6 +44,9 @@ export class DocumentComponent {
 				// Enable dark mode for Velt UI
 				this.client.setDarkMode(true);
 
+				// Restrict Commenting to Video Player
+				this.client.getCommentElement().allowedElementIds(['vid']);
+
 				/**
 				 * When comment is toggled 
 				 * we set the current timestamp as the location
@@ -56,6 +59,24 @@ export class DocumentComponent {
 					}
 				});
 
+
+				const sidebar = document.querySelector('velt-comments-sidebar')
+
+				// Navigate to comments when someone clicks on a comment in sidebar
+				sidebar?.addEventListener('onCommentClick', (e: any) => {
+					
+					// Update Video Timestamp
+					this.videoPlayer.nativeElement.currentTime = e.detail.location.currentMediaPosition;
+					
+					// Update Location based on the comment data
+					this.client?.setLocation(e.detail.location);
+					this.client?.getCommentElement().toggleCommentSidebar();
+
+					// Calculating and Setting Width to our customer seek
+					const seekPercent = (e.detail.location.currentMediaPosition / this.videoPlayer.nativeElement.duration * 100) - 1.5;
+					this.timePassedDiv.nativeElement.style.width = seekPercent + '%'
+
+				})
 			}
 		});
 	}
@@ -66,6 +87,8 @@ export class DocumentComponent {
 	setLocation = () => {
 
 		let location = {
+			id: this.secondsToReadableTime(this.videoPlayer.nativeElement.currentTime),
+			locationName: this.secondsToReadableTime(this.videoPlayer.nativeElement.currentTime),
 			currentMediaPosition: this.videoPlayer.nativeElement.currentTime,
 			videoPlayerId: "vid"
 		}
@@ -142,6 +165,18 @@ export class DocumentComponent {
 		this.timePassedDiv.nativeElement.style.width = seekPercent + '%'
 		this.videoPlayer.nativeElement.currentTime = this.videoPlayer.nativeElement.duration * seekPercent / 100;
 		this.setLocation()
+	}
+
+	/**
+	 * Converts seconds to a readable time format (MM:SS).
+	 * @param seconds The number of seconds to convert.
+	 * @returns A string in the format MM:SS.
+	 */
+	private secondsToReadableTime(seconds: number): string {
+		const minutes = Math.floor(seconds / 60);
+		const remainingSeconds = Math.floor(seconds % 60);
+		const paddedSeconds = remainingSeconds.toString().padStart(2, '0');
+		return `${minutes}:${paddedSeconds}`;
 	}
 
 }
