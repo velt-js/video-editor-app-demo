@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild, effect } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild, effect, HostListener } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { VeltService } from '../../services/velt.service';
 import { NgIf } from '@angular/common';
@@ -59,10 +59,23 @@ export class DocumentComponent {
 					}
 				});
 
+
+				/**
+				 * When comment is added Pause Video
+				 */
+				this.client.getCommentElement().onCommentAdd().subscribe(e => {
+					this.videoPlayer.nativeElement.pause();
+				})
+
+
+				/**
+				 * Set location when reaction tool is toggled
+				 */
 				const reactionToolTag = document.querySelector('velt-reaction-tool');
 				reactionToolTag?.addEventListener('onReactionToolClick', (event: any) => {
 					this.setLocation();
 				});
+
 
 				const sidebar = document.querySelector('velt-comments-sidebar')
 
@@ -183,10 +196,20 @@ export class DocumentComponent {
 		return `${minutes}:${paddedSeconds}`;
 	}
 
+	// Update Width of the custom timeline to match video timestamp
 	updateCustomTimeline() {
 		// Calculating and Setting Width to our customer seek
 		const seekPercent = (this.videoPlayer.nativeElement.currentTime / this.videoPlayer.nativeElement.duration * 100) - 1.5;
 		this.timePassedDiv.nativeElement.style.width = seekPercent + '%'
+	}
+
+	/**
+	 * When 'SPACE' is clicked, toggle the video state
+	 */
+	@HostListener('document:keydown.space', ['$event'])
+	onSpaceKey(event: KeyboardEvent) {
+		event.preventDefault();
+		this.togglePlayPause();
 	}
 
 }
