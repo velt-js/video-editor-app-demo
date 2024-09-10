@@ -59,15 +59,19 @@ export class DocumentComponent {
 					}
 				});
 
+				const reactionToolTag = document.querySelector('velt-reaction-tool');
+				reactionToolTag?.addEventListener('onReactionToolClick', (event: any) => {
+					this.setLocation();
+				});
 
 				const sidebar = document.querySelector('velt-comments-sidebar')
 
 				// Navigate to comments when someone clicks on a comment in sidebar
 				sidebar?.addEventListener('onCommentClick', (e: any) => {
-					
+
 					// Update Video Timestamp
 					this.videoPlayer.nativeElement.currentTime = e.detail.location.currentMediaPosition;
-					
+
 					// Update Location based on the comment data
 					this.client?.setLocation(e.detail.location);
 					this.client?.getCommentElement().toggleCommentSidebar();
@@ -131,7 +135,7 @@ export class DocumentComponent {
 		this.videoPlayer.nativeElement.addEventListener('pause', (e) => {
 			this.isPlaying = false
 		})
-		
+
 		// Play video function for custom player 
 		this.videoPlayer.nativeElement.addEventListener('play', (e) => {
 			this.isPlaying = true
@@ -177,6 +181,12 @@ export class DocumentComponent {
 		const remainingSeconds = Math.floor(seconds % 60);
 		const paddedSeconds = remainingSeconds.toString().padStart(2, '0');
 		return `${minutes}:${paddedSeconds}`;
+	}
+
+	updateCustomTimeline() {
+		// Calculating and Setting Width to our customer seek
+		const seekPercent = (this.videoPlayer.nativeElement.currentTime / this.videoPlayer.nativeElement.duration * 100) - 1.5;
+		this.timePassedDiv.nativeElement.style.width = seekPercent + '%'
 	}
 
 }
