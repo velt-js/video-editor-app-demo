@@ -17,6 +17,6 @@ export class SidebarComponent {
 
 	// Hides Icons if the screen size is small
 	private checkScreenSize(): void {
-		this.iconOnly = window.innerWidth < 1200;
+		this.iconOnly = window.innerWidth <= 1200;
 	}
 }
