@@ -11,12 +11,12 @@ import { VeltService } from '../../services/velt.service';
 	schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ToolbarComponent implements OnInit {
-	isDarkMode = false;
+	isDarkMode = true;
 
 	constructor(private veltService: VeltService) {}
 
 	ngOnInit() {
-		this.isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+		// this.isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
 		this.updateColorScheme();
 	}
 
