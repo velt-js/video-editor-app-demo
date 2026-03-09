@@ -104,7 +104,6 @@ export class DocumentComponent {
 	setLocation = () => {
 
 		let location = {
-			id: this.secondsToReadableTime(this.videoPlayer.nativeElement.currentTime),
 			locationName: this.secondsToReadableTime(this.videoPlayer.nativeElement.currentTime),
 			currentMediaPosition: this.videoPlayer.nativeElement.currentTime,
 			videoPlayerId: "vid"
