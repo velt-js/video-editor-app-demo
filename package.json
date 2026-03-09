@@ -18,7 +18,7 @@
     "@angular/platform-browser": "^17.3.0",
     "@angular/platform-browser-dynamic": "^17.3.12",
     "@angular/router": "^17.3.12",
-    "@veltdev/client": "^4.5.0-beta.61",
+    "@veltdev/client": "^5.0.2-beta.7",
     "rxjs": "~7.8.0",
     "tslib": "^2.7.0",
     "zone.js": "^0.14.10"
@@ -28,7 +28,7 @@
     "@angular/cli": "^17.3.9",
     "@angular/compiler-cli": "^17.3.12",
     "@types/jasmine": "~5.1.0",
-    "@veltdev/types": "^4.5.0-beta.61",
+    "@veltdev/types": "^5.0.2-beta.7",
     "jasmine-core": "~5.1.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
